@@ -1,0 +1,98 @@
+version: '3'
+
+services:
+  php-fpm:
+    container_name: wfrepentance_php-fpm
+    build:
+      context: ./php-fpm
+      args:
+        - PHP_EXT_PDO_MYSQL=${PHP_EXT_PDO_MYSQL}
+        - PHP_EXT_REDIS=${PHP_EXT_REDIS}
+        - PHP_EXT_MBSTRING=${PHP_EXT_MBSTRING}
+        - PHP_EXT_JSON=${PHP_EXT_JSON}
+        - PHP_EXT_CURL=${PHP_EXT_CURL}
+        - PHP_EXT_ZIP=${PHP_EXT_ZIP}
+        - PHP_EXT_INTL=${PHP_EXT_INTL}
+        - PHP_EXT_XML=${PHP_EXT_XML}
+        - PHP_EXT_BCMATH=${PHP_EXT_BCMATH}
+        - PHP_EXT_GD=${PHP_EXT_GD}
+        - PHP_EXT_OPCACHE=${PHP_EXT_OPCACHE}
+        - PHP_EXT_XDEBUG=${PHP_EXT_XDEBUG}
+        - PHP_EXT_SOAP=${PHP_EXT_SOAP}
+        - ENABLE_XHPROF=${ENABLE_XHPROF}
+        - UID=${UID}
+        - GID=${GID}
+    restart: unless-stopped
+    volumes:
+      - "../:/usr/src/app"
+      - "./xhprof:/var/xhprof"
+    networks:
+      - default
+    extra_hosts:
+        - "host.docker.internal:host-gateway"
+    depends_on:
+      - mysql
+    ports:
+        - "127.0.0.1:5173:5173"
+
+  mysql:
+    container_name: wfrepentance_mysql
+    image: bitnamilegacy/mysql:8.4.2
+    restart: unless-stopped
+    volumes:
+      - "./mysql/data:/bitnami/mysql/data"
+      - "./mysql/my.cnf:/opt/bitnami/mysql/conf/my_custom.cnf"
+      - "./mysql/init:/docker-entrypoint-initdb.d"
+    environment:
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+    networks:
+      - default
+    ports:
+      - "127.0.0.1:33066:3306"
+
+  nginx:
+    container_name: wfrepentance_nginx
+    image: nginx:stable-alpine
+    working_dir: /usr/src/app
+    restart: unless-stopped
+    volumes:
+      - "../:/usr/src/app"
+      - "./nginx/vhost/:/etc/nginx/conf.d/"
+      - "./xhprof:/var/xhprof"
+    networks:
+      - default
+    depends_on:
+      - php-fpm
+    ports:
+      - "127.0.0.1:8080:80"
+      - "127.0.0.1:8081:8081"
+
+  mailpit:
+      container_name: wfrepentance_mailpit
+      image: axllent/mailpit
+      restart: unless-stopped
+      user: root
+      networks:
+          - default
+      volumes:
+          - "mailpit:/data"
+      environment:
+          - MP_UI_AUTH=${MP_UI_USER}:${MP_UI_PASSWORD}
+          - MP_MAX_MESSAGES=${MP_MAX_MESSAGES}
+          - MP_DATABASE=/data/mailpit.db
+          - MP_SMTP_AUTH_ACCEPT_ANY=1
+          - MP_SMTP_AUTH_ALLOW_INSECURE=1
+      ports:
+          - "127.0.0.1:8025:8025"
+
+
+networks:
+  default:
+    driver: 'bridge'
+
+volumes:
+  mailpit:
+  redis-data:

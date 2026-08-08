@@ -1,0 +1,29 @@
+/usr/src/app/storage/logs/*.log {
+  su www-data www-data
+  daily
+  rotate 14
+  compress
+  missingok
+  notifempty
+  sharedscripts
+}
+
+/usr/src/app/storage/logs/scheduler/*.log {
+  su www-data www-data
+  daily
+  rotate 14
+  compress
+  missingok
+  notifempty
+  sharedscripts
+}
+
+/usr/src/app/storage/logs/queue/*.log {
+  su www-data www-data
+  daily
+  rotate 14
+  compress
+  missingok
+  notifempty
+  sharedscripts
+}

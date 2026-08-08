@@ -1,0 +1,14 @@
+#!/bin/sh
+
+# turn on bash's job control
+set -m
+
+service cron start
+
+service supervisor start
+
+php-fpm
+
+# now we bring the primary process back into the foreground
+# and leave it there
+fg %1

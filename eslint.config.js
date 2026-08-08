@@ -51,7 +51,7 @@ export default defineConfigWithVueTs(
                 'error',
                 {
                     groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index'],
-                    // alphabetize: { order: 'asc', caseInsensitive: true },
+                    alphabetize: { order: 'asc', caseInsensitive: true },
                 },
             ],
             'import/consistent-type-specifier-style': [
@@ -74,6 +74,7 @@ export default defineConfigWithVueTs(
     },
     {
         ignores: [
+            '.docker',
             'vendor',
             'node_modules',
             'public',

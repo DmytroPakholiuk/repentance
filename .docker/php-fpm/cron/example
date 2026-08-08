@@ -1,0 +1,2 @@
+# Example cron to run Laravel scheduler
+*/5 * * * * www-data cd /usr/src/app && php artisan schedule:run >> /usr/src/app/storage/logs/scheduler/scheduler.log 2>&1
