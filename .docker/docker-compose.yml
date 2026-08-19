@@ -34,6 +34,7 @@ services:
       - mysql
     ports:
         - "127.0.0.1:5173:5173"
+        - "127.0.0.1:8000:8000"
 
   mysql:
     container_name: wfrepentance_mysql

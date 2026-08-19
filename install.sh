@@ -100,7 +100,7 @@ function checkHosts() {
       output "${HOSTS} have been added successfully to /etc/hosts." success
     fi
     output "The sites are available at \n " info
-    output "wfrepentance.loc.com:8080 " info
+    output "wfrepentance.loc.com:8000 " info
     output "Use install.sh with 3. Run dev server for frontend to enable hot server"
 }
 
@@ -110,6 +110,10 @@ function start() {
 
 function frontDev() {
     docker exec wfrepentance_php-fpm bash -c "npm run dev"
+}
+
+function backendDev() {
+    docker exec wfrepentance_php-fpm bash -c "php artisan serve --host=0.0.0.0 --port=8000"
 }
 
 function frontBuild() {

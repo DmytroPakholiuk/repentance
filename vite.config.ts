@@ -1,10 +1,9 @@
-import inertia from '@inertiajs/vite';
-import { wayfinder } from '@laravel/vite-plugin-wayfinder';
 import tailwindcss from '@tailwindcss/vite';
 import vue from '@vitejs/plugin-vue';
 import laravel from 'laravel-vite-plugin';
 import { bunny } from 'laravel-vite-plugin/fonts';
 import { defineConfig } from 'vite';
+import vuetify from 'vite-plugin-vuetify'
 
 export default defineConfig({
     server: {
@@ -13,6 +12,14 @@ export default defineConfig({
         hmr: {
             host: 'localhost',
             port: 5173,
+        },
+        cors: {
+            origin: [
+                'http://localhost',
+                'http://127.0.0.1',
+                'http://localhost:8000',
+                'http://127.0.0.1:8000',
+            ],
         },
     },
     plugins: [
@@ -25,7 +32,6 @@ export default defineConfig({
                 }),
             ],
         }),
-        inertia(),
         tailwindcss(),
         vue({
             template: {
@@ -35,8 +41,8 @@ export default defineConfig({
                 },
             },
         }),
-        wayfinder({
-            formVariants: true,
+        vuetify({
+            autoImport: true,
         }),
     ],
 });
